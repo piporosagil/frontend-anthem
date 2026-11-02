@@ -16,7 +16,9 @@ export default function DatePicker(field: ControllerRenderProps) {
 
   return (
     <Field className="mx-auto">
-      <FieldLabel htmlFor="date">Data de nascimento</FieldLabel>
+      <FieldLabel htmlFor="date" className="font-bold">
+        Data de nascimento
+      </FieldLabel>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger
           render={

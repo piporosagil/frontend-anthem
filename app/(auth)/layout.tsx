@@ -7,12 +7,12 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <main className=" w-dvw h-dvh flex items-center justify-center  bg-slate-900 px-5 py-10">
+    <main className=" min-h-dvh flex items-center justify-center  bg-slate-900 px-5 py-10">
       <section
         aria-labelledby="page-title"
         className="grid md:grid-cols-[0.8fr_0.5fr] overflow-hidden md:grid-flow-row w-full max-w-5xl border border-white/10 bg-white/6 rounded-3xl"
       >
-        <div className="p-12">
+        <div className="p-12 self-center">
           <p className="flex items-center font-bold text-white gap-3 text-xl mb-10">
             <Sparkle
               aria-hidden="true"
