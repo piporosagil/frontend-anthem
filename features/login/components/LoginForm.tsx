@@ -31,13 +31,17 @@ export default function LoginForm() {
     <form onSubmit={handleSubmit(onSubmit)}>
       <FieldGroup>
         <Field>
-          <FieldLabel className="font-bold">Login</FieldLabel>
-          <Input {...register("email")} />
+          <FieldLabel className="font-bold" htmlFor="email">
+            Login
+          </FieldLabel>
+          <Input {...register("email")} id="email" />
           {errors.email && <FieldError>{errors.email.message}</FieldError>}
         </Field>
         <Field>
-          <FieldLabel className="font-bold">Senha</FieldLabel>
-          <Input {...register("password")} type="password" />
+          <FieldLabel className="font-bold" htmlFor="password">
+            Senha
+          </FieldLabel>
+          <Input {...register("password")} type="password" id="password" />
           {errors.password && (
             <FieldError>{errors.password.message}</FieldError>
           )}
