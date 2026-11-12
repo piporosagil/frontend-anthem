@@ -1,4 +1,4 @@
-import RegisterForm from "@/features/register/components/registerForm";
+import RegisterForm from "@/features/auth/register/components/registerForm";
 import Link from "next/link";
 
 export default function RegisterContainer() {

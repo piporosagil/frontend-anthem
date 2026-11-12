@@ -18,26 +18,29 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { registerSchema } from "../registerForm.schema";
-import z from "zod";
+import type { RegisterUserData } from "../registerForm.schema";
+import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import DatePicker from "./datePickle";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { registerUser } from "../../services/api";
 
 export default function RegisterForm() {
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
     control,
-  } = useForm<z.infer<typeof registerSchema>>({
+  } = useForm<z.input<typeof registerSchema>, unknown, RegisterUserData>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: "",
+      username: "",
       email: "",
       password: "",
       confirmPassword: "",
-      favoriteSentence: "",
+      favoritePhrase: "",
     },
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
@@ -46,19 +49,29 @@ export default function RegisterForm() {
     setShowPassword((prev) => !prev);
   }
 
-  function onSubmit(data: z.infer<typeof registerSchema>) {
+  async function onSubmit(data: RegisterUserData) {
     console.log(data);
+    const result = await registerUser(data);
+
+    if (result.statusCode === 409) {
+      setError("email", {
+        type: "server",
+        message: result.message,
+      });
+    }
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <FieldGroup>
         <Field>
-          <FieldLabel className="font-bold" htmlFor="name">
-            Nome
+          <FieldLabel className="font-bold" htmlFor="username">
+            Nome de usuário
           </FieldLabel>
-          <Input id="name" {...register("name")} />
-          {errors.name && <FieldError>{errors.name.message}</FieldError>}
+          <Input id="username" {...register("username")} />
+          {errors.username && (
+            <FieldError>{errors.username.message}</FieldError>
+          )}
         </Field>
         <Field>
           <FieldLabel className="font-bold" htmlFor="email">
@@ -133,10 +146,13 @@ export default function RegisterForm() {
           )}
         </Field>
         <Field>
-          <FieldLabel className="font-bold" htmlFor="favoriteSentence">
-            Palavra favorita
+          <FieldLabel className="font-bold" htmlFor="favoritePhrase">
+            Frase favorita
           </FieldLabel>
-          <Input {...register("favoriteSentence")} id="favoriteSentence" />
+          <Input {...register("favoritePhrase")} id="favoritePhrase" />
+          {errors.favoritePhrase && (
+            <FieldError>{errors.favoritePhrase.message}</FieldError>
+          )}
         </Field>
       </FieldGroup>
       <Button

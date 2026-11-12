@@ -2,7 +2,7 @@ import z from "zod";
 
 export const registerSchema = z
   .object({
-    name: z.string().min(1, {
+    username: z.string().min(1, {
       message: "Seu nome deve ter pelo menos 1 charactere",
     }),
     email: z.email({
@@ -15,9 +15,11 @@ export const registerSchema = z
     confirmPassword: z.string().min(1, {
       message: "Confirme sua senha",
     }),
-    favoriteSentence: z.string().optional(),
+    favoritePhrase: z.string().optional(),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "As senhas não coincidem",
     path: ["confirmPassword"],
   });
+
+export type RegisterUserData = z.infer<typeof registerSchema>;
