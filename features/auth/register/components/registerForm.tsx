@@ -25,6 +25,7 @@ import DatePicker from "./datePickle";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { registerUser } from "../../services/api";
+import { handleRegisterErrors } from "../handleRegisterErrors";
 
 export default function RegisterForm() {
   const {
@@ -50,13 +51,20 @@ export default function RegisterForm() {
   }
 
   async function onSubmit(data: RegisterUserData) {
-    console.log(data);
     const result = await registerUser(data);
+    const resultError = handleRegisterErrors(result);
 
-    if (result.statusCode === 409) {
-      setError("email", {
-        type: "server",
-        message: result.message,
+    if (resultError.type === "server") {
+      setError(resultError.field, {
+        type: resultError.type,
+        message: resultError.message,
+      });
+    }
+
+    if (resultError.type === "networkError") {
+      setError(resultError.field, {
+        type: resultError.type,
+        message: resultError.message,
       });
     }
   }
@@ -154,6 +162,12 @@ export default function RegisterForm() {
             <FieldError>{errors.favoritePhrase.message}</FieldError>
           )}
         </Field>
+        {errors.root?.serverError?.message && (
+          <FieldError>{errors.root.serverError.message}</FieldError>
+        )}
+        {errors.root?.networkError?.message && (
+          <FieldError>{errors.root.networkError.message}</FieldError>
+        )}
       </FieldGroup>
       <Button
         className="mt-5 w-full bg-blue-700 hover:bg-blue-400 hover:cursor-pointer"

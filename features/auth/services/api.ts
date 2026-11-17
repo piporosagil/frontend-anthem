@@ -1,10 +1,13 @@
 "use server";
 
 import type { RegisterUserData } from "../register/registerForm.schema";
+import type { ApiErrorResponse } from "./types";
 
 const apiUrl = process.env.API_URL;
 
-export async function registerUser(registerData: RegisterUserData) {
+export async function registerUser(
+  registerData: RegisterUserData,
+): Promise<ApiErrorResponse> {
   try {
     const response = await fetch(`${apiUrl}/users`, {
       method: "POST",
@@ -14,13 +17,16 @@ export async function registerUser(registerData: RegisterUserData) {
       body: JSON.stringify(registerData),
     });
 
-    if (!response.ok) {
-      console.log("deu erro");
-    }
-
     const data = await response.json();
+
     return data;
   } catch (error) {
-    console.error(error);
+    console.log(error);
+
+    return {
+      message: "Não foi possível conectar ao servidor.",
+      error: "NetworkError",
+      statusCode: null,
+    };
   }
 }
