@@ -26,6 +26,7 @@ import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { registerUser } from "../../services/api";
 import { handleRegisterErrors } from "../handleRegisterErrors";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
   const {
@@ -45,6 +46,7 @@ export default function RegisterForm() {
     },
   });
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const router = useRouter();
 
   function handleTogglePassword(): void {
     setShowPassword((prev) => !prev);
@@ -52,21 +54,27 @@ export default function RegisterForm() {
 
   async function onSubmit(data: RegisterUserData) {
     const result = await registerUser(data);
-    const resultError = handleRegisterErrors(result);
 
-    if (resultError.type === "server") {
-      setError(resultError.field, {
-        type: resultError.type,
-        message: resultError.message,
-      });
+    if (result.error) {
+      const resultError = handleRegisterErrors(result);
+      if (resultError.type === "server") {
+        setError(resultError.field, {
+          type: resultError.type,
+          message: resultError.message,
+        });
+      }
+
+      if (resultError.type === "networkError") {
+        setError(resultError.field, {
+          type: resultError.type,
+          message: resultError.message,
+        });
+      }
+
+      return;
     }
 
-    if (resultError.type === "networkError") {
-      setError(resultError.field, {
-        type: resultError.type,
-        message: resultError.message,
-      });
-    }
+    router.push("/");
   }
 
   return (
