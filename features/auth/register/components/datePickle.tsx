@@ -9,6 +9,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useState } from "react";
+import { ptBR } from "date-fns/locale";
+import { format } from "date-fns";
 import type { ControllerRenderProps } from "react-hook-form";
 
 export default function DatePicker(field: ControllerRenderProps) {
@@ -39,6 +41,7 @@ export default function DatePicker(field: ControllerRenderProps) {
             selected={field.value}
             defaultMonth={field.value}
             captionLayout="dropdown"
+            locale={ptBR}
             onSelect={(date) => {
               field.onChange(date);
               setOpen(false);
